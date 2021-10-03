@@ -1,0 +1,22 @@
+#!/bin/bash
+yum update -y
+cd /tmp
+wget https://wordpress.org/latest.tar.gz
+tar xvf latest.tar.gz
+yum install -y httpd mariadb-server jq
+amazon-linux-extras install -y php7.3
+yum install -y php-pecl-mcrypt php-pecl-imagick php-mbstring
+systemctl enable mariadb
+systemctl start mariadb
+systemctl enable httpd
+systemctl start httpd
+rsync -r /tmp/wordpress/. /var/www/html
+aws secretsmanager get-secret-value --secret-id WordpressDB --query SecretString --version-stage AWSCURRENT --region us-east-1 --output text | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > /var/www/.env
+curl -sS https://getcomposer.org/installer | sudo php
+mv composer.phar /usr/local/bin/composer
+ln -s /usr/local/bin/composer /usr/bin/composer
+cd /var/www/
+wget https://raw.githubusercontent.com/rayheffer/wp-secrets/master/wp-config.php
+wget https://raw.githubusercontent.com/rayheffer/wp-secrets/master/composer.json
+sudo composer install
+chown -R apache:apache /var/www/
