@@ -16,7 +16,7 @@ curl -sS https://getcomposer.org/installer | sudo php
 mv composer.phar /usr/local/bin/composer
 ln -s /usr/local/bin/composer /usr/bin/composer
 cd /var/www/
-wget https://raw.githubusercontent.com/rayheffer/wp-secrets/master/wp-config.php
-wget https://raw.githubusercontent.com/rayheffer/wp-secrets/master/composer.json
+wget https://raw.githubusercontent.com/pm3lvin/wp-secrets/master/wp-config.php
+wget https://raw.githubusercontent.com/pm3lvin/wp-secrets/master/composer.json
 sudo composer install
 chown -R apache:apache /var/www/
